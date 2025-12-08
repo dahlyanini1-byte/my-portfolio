@@ -1,0 +1,35 @@
+name: Utc App ci/cd 
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+   python_version: 3.11 
+IMAGE_NAME: portfolio
+AWS_REGION: us-east-1
+ACCOUNT_ID: ${{secret.ACCOUNT_ID}}
+ECR_REPO: $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_NAME
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+          - uses: actions/checkout@v4
+          - uses: actions/setup-python@v4
+            with:
+             python-version: ${{env.python_version}} # or $python_version
+          - name: install pytest
+          run: pip install -r requirements.txt
+          - name: unit test      
+            run: pytest test.py
+          - name: Configure AWS credentials using OIDC
+          uses: aws-actions/configure-aws-credentials@v2
+          with:
+            role-to-assume: ${{secrets.ROLE_ARN}}
+            aws-region: ${{ env.AWS_REGION}}  
+          name: check credentials
+          run: aws s3 ls
+
