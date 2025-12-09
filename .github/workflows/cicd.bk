@@ -10,8 +10,8 @@ env:
    python_version: 3.11 
 IMAGE_NAME: portfolio
 AWS_REGION: us-east-1
-ACCOUNT_ID: ${{ secret.ACCOUNT_ID}}
-ECR_REPO: ${{ secret.ACCOUNT_ID}}.dkr.ecr.us-east-1.amazonaws.com/dev/portfolio
+ACCOUNT_ID: ${{ secrets.ACCOUNT_ID }}
+ECR_REPO: ${{ secrets.ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/dev/portfolio
 
 jobs:
     build:
